@@ -1,0 +1,277 @@
+---
+import { httpStatusCodes } from '../data/statusCodes';
+import imagePlaceholders from '../data/imagePlaceholders.json';
+
+const availableRabbitImages = [100,101,102,103,200,201,202,203,204,205,206,207,208,226,300,301,302,303,304,305,306,307,308,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,421,422,423,424,425,426,428,429,430,431];
+
+const statusCodesWithImages = httpStatusCodes.map(status => ({
+  ...status,
+  imageUrl: availableRabbitImages.includes(status.code)
+    ? `/rabbits/${status.code}.jpg`
+    : imagePlaceholders[status.code as keyof typeof imagePlaceholders]
+}));
+
+const groupedCodes = {
+  '1xx': statusCodesWithImages.filter(s => s.category === '1xx'),
+  '2xx': statusCodesWithImages.filter(s => s.category === '2xx'),
+  '3xx': statusCodesWithImages.filter(s => s.category === '3xx'),
+  '4xx': statusCodesWithImages.filter(s => s.category === '4xx'),
+  '5xx': statusCodesWithImages.filter(s => s.category === '5xx'),
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="HTTP Status Rabbits - HTTP status codes explained with adorable rabbits" />
+    <meta property="og:title" content="HTTP Status Rabbits" />
+    <meta property="og:description" content="HTTP status codes explained with adorable rabbits" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://httpstatusrabbits.com" />
+    <title>HTTP Status Rabbits</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-color: #ff6b6b;
+        --secondary-color: #4ecdc4;
+        --text-color: #2c3e50;
+        --bg-color: #f8f9fa;
+        --card-bg: #ffffff;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --shadow-hover: 0 8px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+
+      .header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        font-weight: 700;
+      }
+
+      .header p {
+        font-size: 1.25rem;
+        opacity: 0.95;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .category-section {
+        margin-bottom: 3rem;
+      }
+
+      .category-title {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .category-title::before {
+        content: '';
+        width: 4px;
+        height: 2rem;
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        border-radius: 2px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .status-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .status-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      .status-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: #f0f0f0;
+      }
+
+      .status-content {
+        padding: 1.25rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .status-code {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .status-message {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--text-color);
+      }
+
+      .status-description {
+        font-size: 0.9rem;
+        color: #666;
+        line-height: 1.5;
+        flex: 1;
+      }
+
+      .unofficial-badge {
+        display: inline-block;
+        background: #ffc107;
+        color: #000;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        text-transform: uppercase;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 3rem;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      .footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+      }
+
+      .footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .header p {
+          font-size: 1rem;
+        }
+
+        .grid {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .category-title {
+          font-size: 1.5rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .container {
+          padding: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1>HTTP Status Rabbits</h1>
+      <p>HTTP status codes explained with adorable rabbits</p>
+    </header>
+
+    <div class="container">
+      {Object.entries(groupedCodes).map(([category, codes]) => (
+        <section class="category-section">
+          <h2 class="category-title">{category} {
+            category === '1xx' ? 'Informational' :
+            category === '2xx' ? 'Success' :
+            category === '3xx' ? 'Redirection' :
+            category === '4xx' ? 'Client Error' :
+            'Server Error'
+          }</h2>
+          <div class="grid">
+            {codes.map(status => (
+              <article class="status-card">
+                <img
+                  src={status.imageUrl}
+                  alt={`HTTP ${status.code} - ${status.message}`}
+                  class="status-image"
+                  loading="lazy"
+                />
+                <div class="status-content">
+                  <div class="status-code">
+                    {status.code}
+                    {status.isUnofficial && <span class="unofficial-badge">Unofficial</span>}
+                  </div>
+                  <div class="status-message">{status.message}</div>
+                  <p class="status-description">{status.description}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <footer class="footer">
+      <p>
+        Inspired by <a href="https://http.cat" target="_blank" rel="noopener">HTTP Cats</a> and
+        <a href="https://httpstatusdogs.com" target="_blank" rel="noopener">HTTP Status Dogs</a>
+      </p>
+      <p style="margin-top: 0.5rem;">
+        Made with love for rabbits and the web
+      </p>
+    </footer>
+  </body>
+</html>
