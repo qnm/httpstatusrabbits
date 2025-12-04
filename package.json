@@ -7,7 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "download-images": "tsx scripts/downloadImages.ts"
+    "download-images": "tsx scripts/downloadImages.ts",
+    "deploy": "npm run build && npx wrangler pages deploy dist --project-name=httpstatusrabbits"
   },
   "dependencies": {
     "astro": "^5.16.4"

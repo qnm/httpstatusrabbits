@@ -77,9 +77,19 @@ This site is configured for deployment to Cloudflare Pages.
 
 ### Via Wrangler CLI
 
+First, authenticate with Cloudflare:
+
 ```bash
-npx wrangler pages deploy dist
+npx wrangler login
 ```
+
+Then deploy:
+
+```bash
+npm run deploy
+```
+
+This will build the site and deploy it to Cloudflare Pages with the project name `httpstatusrabbits`.
 
 ## Project Structure
 
