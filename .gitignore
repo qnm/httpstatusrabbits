@@ -21,3 +21,10 @@ pnpm-debug.log*
 .DS_Store
 
 .claude
+
+# playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
