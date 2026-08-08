@@ -16,7 +16,7 @@
     "test:ui": "playwright test --ui"
   },
   "dependencies": {
-    "astro": "^5.18.1"
+    "astro": "^7.2.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
